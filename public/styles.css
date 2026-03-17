@@ -1,0 +1,353 @@
+:root {
+    color-scheme: light;
+    --bg: #f4efe8;
+    --panel: rgba(255, 251, 247, 0.88);
+    --panel-strong: #fffdf9;
+    --line: rgba(56, 37, 27, 0.12);
+    --text: #241914;
+    --muted: #6e5a50;
+    --accent: #d95d39;
+    --accent-dark: #8f2d1f;
+    --ok: #1f8f62;
+    --warn: #bf6c11;
+    --bad: #a7362a;
+    --shadow: 0 24px 60px rgba(61, 38, 25, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at top left, rgba(217, 93, 57, 0.25), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(31, 143, 98, 0.18), transparent 22%),
+        linear-gradient(180deg, #f7f3ee 0%, #efe6da 100%);
+}
+
+.shell {
+    width: min(1120px, calc(100% - 32px));
+    margin: 32px auto;
+    display: grid;
+    gap: 20px;
+}
+
+.hero,
+.panel,
+.download-card {
+    backdrop-filter: blur(14px);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+}
+
+.hero {
+    padding: 28px;
+    display: grid;
+    gap: 20px;
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+    max-width: 10ch;
+}
+
+.hero p {
+    margin: 0;
+    color: var(--muted);
+    max-width: 60ch;
+    font-size: 1rem;
+}
+
+.hero-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+    align-items: start;
+}
+
+.panel {
+    padding: 20px;
+}
+
+form {
+    display: grid;
+    gap: 12px;
+}
+
+label {
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+}
+
+input {
+    width: 100%;
+    border: 1px solid rgba(56, 37, 27, 0.16);
+    border-radius: 16px;
+    padding: 16px 18px;
+    font: inherit;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.82);
+}
+
+input:focus {
+    outline: 2px solid rgba(217, 93, 57, 0.3);
+    border-color: rgba(217, 93, 57, 0.45);
+}
+
+button {
+    border: 0;
+    border-radius: 16px;
+    padding: 0 22px;
+    min-height: 54px;
+    font: inherit;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    transition: transform 150ms ease, box-shadow 150ms ease;
+    box-shadow: 0 12px 30px rgba(143, 45, 31, 0.2);
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+}
+
+.hint,
+.meta,
+.banner {
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.banner {
+    min-height: 22px;
+    padding: 0 2px;
+}
+
+.banner.error {
+    color: var(--bad);
+}
+
+.banner.success {
+    color: var(--ok);
+}
+
+.stats {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.stat {
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(56, 37, 27, 0.08);
+}
+
+.stat strong {
+    display: block;
+    font-size: 1.6rem;
+    margin-top: 6px;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.downloads {
+    display: grid;
+    gap: 14px;
+}
+
+.download-card {
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+}
+
+.download-top {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.download-name {
+    margin: 0;
+    font-size: 1.05rem;
+    word-break: break-word;
+}
+
+.download-source {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    word-break: break-all;
+}
+
+.badge {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    background: rgba(36, 25, 20, 0.08);
+}
+
+.badge.active {
+    background: rgba(31, 143, 98, 0.15);
+    color: var(--ok);
+}
+
+.badge.waiting,
+.badge.paused {
+    background: rgba(191, 108, 17, 0.15);
+    color: var(--warn);
+}
+
+.badge.complete {
+    background: rgba(31, 143, 98, 0.12);
+    color: var(--ok);
+}
+
+.badge.error,
+.badge.removed {
+    background: rgba(167, 54, 42, 0.12);
+    color: var(--bad);
+}
+
+.progress-track {
+    width: 100%;
+    height: 12px;
+    background: rgba(36, 25, 20, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #d95d39, #f4a259 55%, #1f8f62);
+    transition: width 220ms ease;
+}
+
+.download-metrics {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.metric {
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid rgba(56, 37, 27, 0.08);
+}
+
+.metric span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-bottom: 6px;
+}
+
+.metric strong {
+    font-size: 0.98rem;
+}
+
+.download-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-button {
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 12px;
+    box-shadow: none;
+    font-size: 0.92rem;
+}
+
+.action-button.secondary {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(56, 37, 27, 0.12);
+}
+
+.action-button.warn {
+    background: linear-gradient(135deg, #8f2d1f, #bf4b2d);
+}
+
+.empty {
+    padding: 32px 22px;
+    text-align: center;
+    border-radius: 24px;
+    background: rgba(255, 253, 249, 0.74);
+    border: 1px dashed rgba(56, 37, 27, 0.18);
+    color: var(--muted);
+}
+
+@media (max-width: 900px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .download-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .shell {
+        width: min(100% - 20px, 1120px);
+        margin: 14px auto 22px;
+    }
+
+    .hero,
+    .panel,
+    .download-card {
+        border-radius: 20px;
+    }
+
+    .input-row {
+        grid-template-columns: 1fr;
+    }
+
+    .stats,
+    .download-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .download-top,
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
