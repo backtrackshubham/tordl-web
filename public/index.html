@@ -8,52 +8,77 @@
 </head>
 <body>
     <main class="shell">
-        <section class="hero">
+        <header class="panel nav-shell">
             <div>
-                <p class="meta">Aria2-backed downloads with live progress and concurrent queueing.</p>
-                <h1>Queue URLs. Track progress. Keep downloading.</h1>
+                <p class="meta">Aria2-backed downloads with live progress and file viewing.</p>
+                <h1>tordl manager</h1>
             </div>
+            <nav class="tabs" aria-label="Main sections">
+                <button class="tab-button is-active" type="button" data-tab-trigger="downloader">Downloader</button>
+                <button class="tab-button" type="button" data-tab-trigger="files">Files</button>
+            </nav>
+        </header>
 
-            <div class="hero-grid">
-                <section class="panel">
-                    <form id="download-form">
-                        <div>
-                            <label for="url-input">Download URL</label>
-                            <p class="hint">Submit one URL at a time. Supports http, https, ftp, and magnet links. Aria2 will run up to <strong id="max-concurrency-hint">configured</strong> downloads simultaneously and queue the rest.</p>
-                        </div>
-                        <div>
-                            <label for="subfolder-input">Optional subfolder</label>
-                            <p class="hint">If provided, the file will be saved under downloads/&lt;subfolder&gt;.</p>
-                            <input id="subfolder-input" name="subfolder" type="text" placeholder="movies/2026" autocomplete="off" />
-                        </div>
-                        <div class="input-row">
-                            <input id="url-input" name="url" type="text" placeholder="https://example.com/file.zip or magnet:?xt=..." autocomplete="off" required />
-                            <button id="submit-button" type="submit">Add download</button>
-                        </div>
-                        <div id="banner" class="banner"></div>
-                    </form>
-                </section>
+        <section id="tab-downloader" class="tab-panel is-active" data-tab-panel="downloader">
+            <section class="hero">
+                <div>
+                    <h2>Queue URLs and track progress</h2>
+                    <p class="meta">Submit links and monitor active, queued, completed, and failed downloads.</p>
+                </div>
 
-                <aside class="panel">
-                    <div class="stats" id="stats">
-                        <div class="stat"><span>Active</span><strong>0</strong></div>
-                        <div class="stat"><span>Queued</span><strong>0</strong></div>
-                        <div class="stat"><span>Completed</span><strong>0</strong></div>
-                        <div class="stat"><span>Failed</span><strong>0</strong></div>
+                <div class="hero-grid">
+                    <section class="panel">
+                        <form id="download-form">
+                            <div>
+                                <label for="url-input">Download URL</label>
+                                <p class="hint">Submit one URL at a time. Supports http, https, ftp, and magnet links. Aria2 will run up to <strong id="max-concurrency-hint">configured</strong> downloads simultaneously and queue the rest.</p>
+                            </div>
+                            <div>
+                                <label for="subfolder-input">Optional subfolder</label>
+                                <p class="hint">If provided, the file will be saved under downloads/&lt;subfolder&gt;.</p>
+                                <input id="subfolder-input" name="subfolder" type="text" placeholder="movies/2026" autocomplete="off" />
+                            </div>
+                            <div class="input-row">
+                                <input id="url-input" name="url" type="text" placeholder="https://example.com/file.zip or magnet:?xt=..." autocomplete="off" required />
+                                <button id="submit-button" type="submit">Add download</button>
+                            </div>
+                            <div id="banner" class="banner"></div>
+                        </form>
+                    </section>
+
+                    <aside class="panel">
+                        <div class="stats" id="stats">
+                            <div class="stat"><span>Active</span><strong>0</strong></div>
+                            <div class="stat"><span>Queued</span><strong>0</strong></div>
+                            <div class="stat"><span>Completed</span><strong>0</strong></div>
+                            <div class="stat"><span>Failed</span><strong>0</strong></div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="toolbar">
+                    <div>
+                        <strong>Download activity</strong>
+                        <div class="meta" id="meta">Connecting to aria2...</div>
                     </div>
-                </aside>
-            </div>
+                    <div class="meta" id="refresh-meta">Refreshing...</div>
+                </div>
+                <div class="downloads" id="downloads"></div>
+            </section>
         </section>
 
-        <section class="panel">
-            <div class="toolbar">
-                <div>
-                    <strong>Download activity</strong>
-                    <div class="meta" id="meta">Connecting to aria2...</div>
+        <section id="tab-files" class="tab-panel" data-tab-panel="files">
+            <section class="panel">
+                <div class="toolbar">
+                    <div>
+                        <strong>Downloaded videos</strong>
+                        <div class="meta" id="files-meta">Scanning downloads folder...</div>
+                    </div>
                 </div>
-                <div class="meta" id="refresh-meta">Refreshing...</div>
-            </div>
-            <div class="downloads" id="downloads"></div>
+                <div class="downloads" id="files"></div>
+            </section>
         </section>
     </main>
 

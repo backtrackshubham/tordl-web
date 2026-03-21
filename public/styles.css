@@ -36,6 +36,58 @@ body {
     gap: 20px;
 }
 
+.nav-shell {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 16px;
+}
+
+.nav-shell h1 {
+    margin: 6px 0 0;
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    letter-spacing: -0.03em;
+}
+
+.tabs {
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(56, 37, 27, 0.12);
+}
+
+.tab-button {
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 10px;
+    box-shadow: none;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+.tab-button:hover {
+    transform: none;
+}
+
+.tab-button.is-active {
+    color: white;
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    border-color: rgba(143, 45, 31, 0.45);
+}
+
+.tab-panel {
+    display: none;
+    gap: 20px;
+}
+
+.tab-panel.is-active {
+    display: grid;
+}
+
 .hero,
 .panel,
 .download-card {
@@ -58,6 +110,13 @@ body {
     line-height: 0.95;
     letter-spacing: -0.06em;
     max-width: 10ch;
+}
+
+.hero h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
 }
 
 .hero p {
@@ -263,6 +322,10 @@ button:disabled {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+#files .download-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .metric {
     padding: 12px;
     border-radius: 16px;
@@ -295,6 +358,13 @@ button:disabled {
     font-size: 0.92rem;
 }
 
+.action-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
 .action-button.secondary {
     color: var(--text);
     background: rgba(255, 255, 255, 0.8);
@@ -315,6 +385,19 @@ button:disabled {
 }
 
 @media (max-width: 900px) {
+    .nav-shell {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tabs {
+        width: 100%;
+    }
+
+    .tab-button {
+        flex: 1 1 0;
+    }
+
     .hero-grid {
         grid-template-columns: 1fr;
     }

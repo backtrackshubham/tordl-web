@@ -7,11 +7,39 @@ const SUPPORTED_SCHEMES = ['http:', 'https:', 'ftp:', 'magnet:'];
 const submitButton = document.getElementById('submit-button');
 const banner = document.getElementById('banner');
 const downloadsRoot = document.getElementById('downloads');
+const filesRoot = document.getElementById('files');
 const statsRoot = document.getElementById('stats');
 const meta = document.getElementById('meta');
 const refreshMeta = document.getElementById('refresh-meta');
+const filesMeta = document.getElementById('files-meta');
+const tabTriggers = Array.from(document.querySelectorAll('[data-tab-trigger]'));
+const tabPanels = Array.from(document.querySelectorAll('[data-tab-panel]'));
 const pendingActions = new Set();
 let lastRefresh = null;
+
+function activateTab(tabName) {
+    tabTriggers.forEach(function(button) {
+        const isActive = button.getAttribute('data-tab-trigger') === tabName;
+        button.classList.toggle('is-active', isActive);
+    });
+
+    tabPanels.forEach(function(panel) {
+        const isActive = panel.getAttribute('data-tab-panel') === tabName;
+        panel.classList.toggle('is-active', isActive);
+    });
+}
+
+tabTriggers.forEach(function(button) {
+    button.addEventListener('click', function() {
+        const tabName = button.getAttribute('data-tab-trigger');
+
+        if (!tabName) {
+            return;
+        }
+
+        activateTab(tabName);
+    });
+});
 
 function formatBytes(value) {
     const numeric = Number(value || 0);
@@ -110,6 +138,32 @@ function renderDownloads(downloads) {
     }).join('');
 }
 
+function renderFiles(files) {
+    if (!files.length) {
+        filesRoot.innerHTML = '<div class="empty">No downloaded videos found on disk yet.</div>';
+        return;
+    }
+
+    filesRoot.innerHTML = files.map(function(item) {
+        return [
+            '<article class="download-card">',
+            '  <div class="download-top">',
+            '    <div>',
+            '      <h3 class="download-name">' + escapeHtml(item.name) + '</h3>',
+            '      <p class="download-source">' + escapeHtml(item.relativePath) + '</p>',
+            '    </div>',
+            '    <span class="badge complete">ready</span>',
+            '  </div>',
+            '  <div class="download-metrics">',
+            '    <div class="metric"><span>Size</span><strong>' + formatBytes(item.size) + '</strong></div>',
+            '    <div class="metric"><span>Updated</span><strong>' + escapeHtml(new Date(item.modifiedAt).toLocaleString()) + '</strong></div>',
+            '  </div>',
+            '  <div class="download-actions"><a class="action-button secondary action-link" href="' + escapeHtml(item.viewUrl) + '" target="_blank" rel="noopener noreferrer">View</a></div>',
+            '</article>'
+        ].join('');
+    }).join('');
+}
+
 async function runDownloadAction(gid, action) {
     const pendingKey = gid + ':' + action;
     pendingActions.add(pendingKey);
@@ -150,7 +204,12 @@ async function loadDownloads() {
         const payload = await response.json();
 
         if (!response.ok) {
-            throw new Error(payload.error || 'Unable to load downloads');
+            renderStats(payload.stats || { active: 0, queued: 0, completed: 0, failed: 0 });
+            renderDownloads(Array.isArray(payload.downloads) ? payload.downloads : []);
+            maxConcurrencyHint.textContent = String((payload.config && payload.config.maxConcurrentDownloads) || 'configured');
+            meta.textContent = payload.error || 'aria2 unavailable';
+            refreshMeta.textContent = 'Retrying...';
+            return;
         }
 
         renderStats(payload.stats);
@@ -166,6 +225,30 @@ async function loadDownloads() {
         meta.textContent = 'aria2 unavailable';
         refreshMeta.textContent = 'Retrying...';
     }
+}
+
+async function loadFiles() {
+    try {
+        const response = await fetch('/api/files');
+        const payload = await response.json();
+
+        if (!response.ok) {
+            renderFiles([]);
+            filesMeta.textContent = payload.error || 'Unable to read downloaded videos';
+            return;
+        }
+
+        const files = Array.isArray(payload.files) ? payload.files : [];
+        renderFiles(files);
+        filesMeta.textContent = files.length + ' video file' + (files.length === 1 ? '' : 's') + ' found in downloads';
+    } catch (error) {
+        renderFiles([]);
+        filesMeta.textContent = 'Unable to read downloaded videos';
+    }
+}
+
+async function refreshData() {
+    await Promise.all([loadDownloads(), loadFiles()]);
 }
 
 form.addEventListener('submit', async function(event) {
@@ -210,7 +293,7 @@ form.addEventListener('submit', async function(event) {
 
         input.value = '';
         setBanner('Download added to aria2 queue.', 'success');
-        await loadDownloads();
+        await refreshData();
     } catch (error) {
         setBanner(error.message, 'error');
     } finally {
@@ -237,5 +320,5 @@ downloadsRoot.addEventListener('click', function(event) {
     runDownloadAction(gid, action);
 });
 
-loadDownloads();
-setInterval(loadDownloads, 1500);
+refreshData();
+setInterval(refreshData, 2000);
